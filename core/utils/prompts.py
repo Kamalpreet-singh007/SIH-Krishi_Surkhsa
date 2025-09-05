@@ -2,7 +2,7 @@
 
 class PromptTypes:
     AGRI_CHATBOT = "AGRI_CHATBOT"
-    CROP_RECOMMENDATION = "CROP_RECOMMENDATION"   
+    CROP_RECOMMENDATION = "CROP_RECOMMENDATION"
 
 
 AGRI_CHATBOT_PROMPT = """
@@ -10,21 +10,24 @@ AGRI_CHATBOT_PROMPT = """
 
 Please respond in Hindi or English depending on the language of the user's query.
 
-If the query is unrelated to agriculture, politely refuse to answer.
+If the query is unrelated to agriculture, politely refuse to answer in the language of user's query
 
 {context}:
 User query:
 {query}
 
-Answer in Hindi or English based on the user's query language.
+The user asked in Hindi, so respond only in Hindi.
+Provide the crop recommendations in structured JSON format, but all field values (season, soil type, notes, etc.) should be in Hindi.
 
 """
 
 CROP_RECOMMENDATION_PROMPT = """
-      i am giving you data about the weather and soil conditions of a location. Based on this data, you must recommend the best crops to grow in that location. 
+      i am giving you data about the weather and soil conditions of a location. Based on this data, you must recommend the best crops to grow in that location.
       {context}
       {query}
-      
+    The user asked in Hindi, so respond only in Hindi.
+    Provide the crop recommendations in structured JSON format, but all field values (season, soil type, notes, etc.) should be in Hindi.
+
       the data must be a list of crops of  format i am providing below.
       crop format:
         Crop Name: <name>
@@ -34,7 +37,8 @@ CROP_RECOMMENDATION_PROMPT = """
         rainfall range: <rainfall range>
         additional notes: <additional notes>
 
-        i want no extra text only a json array of crops in the above format.
+        Respond only with a valid JSON array. Do not include any explanation or extra text.
+
 
 """
 
@@ -49,5 +53,3 @@ def prompt_builder(context, memory, user_query, prompt_type, lon, lat):
         raise ValueError("Invalid prompt type")
         # // or use a base prompt
     return chosen_prompt.format(context=context, memory=memory, query=user_query)
-
-

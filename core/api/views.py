@@ -2,10 +2,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response as drfResponse
 from utils.apis import get_weather,get_soil_detail
-from utils.ai_utils import get_crop_recomendation
+from utils.ai_utils import get_crop_recomendation , get_chat_response
 from rest_framework import status
 from utils.district_utils import get_district_info, get_district_from_coordinates
 from datetime import date , timedelta
+
 
 # Create your views here.
 class DistrictInfo(APIView):
@@ -56,3 +57,20 @@ class CropRecommendation(APIView):
         except Exception as e:
             return drfResponse({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return drfResponse(response, status=status.HTTP_200_OK)
+
+class AgriChatBot(APIView):
+    def post(self, request):
+        try:
+            user_query = request.data.get("user_query")
+            lat = request.data.get("latitude")
+            lon = request.data.get("longitude")
+            prompt_type = request.data.get("prompt_type", "AGRI_CHATBOT")
+
+            if not user_query:
+                return drfResponse({"error": "user_query is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            response = get_chat_response(user_query, prompt_type, lon, lat)
+            return drfResponse({"response": response}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return drfResponse({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
