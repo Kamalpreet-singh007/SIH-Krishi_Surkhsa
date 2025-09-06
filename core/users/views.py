@@ -1,7 +1,7 @@
 # from django.shortcuts import render
 from rest_framework.response import Response as DRFResponse
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
+from .models import User
 from rest_framework import status
 
 # Create your views here.
@@ -12,7 +12,7 @@ class userCrateView(APIView):
         username = request.data.get("username")
         password = request.data.get("password")
 
-        if not all([email,username,password]):
+        if not all([email,password]):
             return DRFResponse({"error":"Please provide all the details"},status=400)
         if User.objects.filter(username = username).exists():
             return DRFResponse({"error":"Email already exists"},status=400)

@@ -11,13 +11,12 @@ AGRI_CHATBOT_PROMPT = """
 Please respond in Hindi or English depending on the language of the user's query.
 
 If the query is unrelated to agriculture, politely refuse to answer in the language of user's query
+dont talk about like given data just say acc to weather in you location or something like that
 
 {context}:
 User query:
 {query}
 
-The user asked in Hindi, so respond only in Hindi.
-Provide the crop recommendations in structured JSON format, but all field values (season, soil type, notes, etc.) should be in Hindi.
 
 """
 
@@ -25,20 +24,27 @@ CROP_RECOMMENDATION_PROMPT = """
       i am giving you data about the weather and soil conditions of a location. Based on this data, you must recommend the best crops to grow in that location.
       {context}
       {query}
-    The user asked in Hindi, so respond only in Hindi.
-    Provide the crop recommendations in structured JSON format, but all field values (season, soil type, notes, etc.) should be in Hindi.
+      The output must be in strict JSON format only. Do not include any text, comments, or symbols outside the JSON. 
 
-      the data must be a list of crops of  format i am providing below.
-      crop format:
-        Crop Name: <name>
-        season: <season>
-        soil type: <soil type>
-        temperature range: <temperature range>
-        rainfall range: <rainfall range>
-        additional notes: <additional notes>
+    The JSON must be a list `[]` of crops. Each crop object must follow this exact structure:
+heres an example of the list 
+        
+  "Id": (integer, unique crop identifier),
+  "Name": (string, crop name),
+  "Confidence": (percentage),
+  "Description": (short string describing crop),
+  "Pros": [list of strings, advantages],
+  "Cons": [list of strings, disadvantages],
+  "WaterRequirement": (string, e.g. "500-800 mm"),
+  "SoilType": (string),
+  "GrowthPeriod": (string, e.g. "90-120 days")
+  "Icon":String name of icon similar to crop in Lucide set (example :lucide:wheat) 
 
-        Respond only with a valid JSON array. Do not include any explanation or extra text.
 
+        Rules:
+        - Return only JSON.
+        - The result must be valid and strictly parsable.
+        - Do not include backticks, markdown, explanations, or any surrounding text — just the pure JSON array not even'`', "```json
 
 """
 

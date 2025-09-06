@@ -23,7 +23,8 @@ const LoginPage: React.FC = () => {
     
     try {
       setIsLoading(true);
-      await login(email, password);
+      const response = await login(email, password);
+      if (response)
       history.push("/location-permission");
     } catch (err) {
       setError("Invalid email or password");

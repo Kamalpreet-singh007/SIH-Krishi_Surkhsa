@@ -1,26 +1,29 @@
 # import pinecone
-from utils.apis import get_weather,get_soil_detail
+from utils.apis import get_soil_detail
+import asyncio
+from django.http import StreamingHttpResponse
 import google.generativeai as genai
 from django.conf import settings
 from utils.prompts import prompt_builder
-import re
+from utils.apis import get_weather
+
 
 GEMINI_API_KEY = settings.GEMINI_API_KEY
 client = genai.configure(api_key =GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 def askAi(prompt):
-    response = model.generate_content(prompt)
-    raw_text = response.text
+    def response_generator():
+        # Initiate streaming from the AI model
+        response_stream = model.generate_content(
+            contents=prompt,
+            stream = True
+        )
+        # Yield each chunk as soon as it arrives
+        for chunk in response_stream:
+            yield chunk.text
 
-    # Remove ```json ... ``` wrappers if present
-    cleaned_text = re.sub(r"^```json|```$", "", raw_text.strip(), flags=re.MULTILINE).strip()
-
-    try:
-        import json
-        return json.loads(cleaned_text)  # Parse into real JSON
-    except Exception:
-        return cleaned_text  # Fallback if it's not valid JSON
+    return StreamingHttpResponse(response_generator(), content_type="text/plain")
 
 
 def get_crop_recomendation(user_query ,prompt_type,lon, lat):
@@ -45,22 +48,20 @@ def get_chat_response(user_query, prompt_type, lon, lat):
 
 
 
-def get_context_json( lat, lon):
-      weather_data = get_weather(lat, lon)
-      soil_data = get_soil_detail(lat, lon)
-      return {**weather_data, **soil_data}
+def get_context_json(lat, lon):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 
+    weather_data, soil_data = loop.run_until_complete(
+    asyncio.gather(
+        get_weather(lat, lon),
+        get_soil_detail(lat, lon)
+    )
+)
+    print(soil_data)
+    loop.close()
+    return {**weather_data, **soil_data}
+   
 
 def context_builder(context_json):
-    weather = context_json.get("weather", {})
-    soil = context_json.get("soil", {})
-    return (
-        f"Weather conditions:\n"
-        f"- Current Temp: {weather.get('temperature', {}).get('current')}°C\n"
-        f"- Min Temp: {weather.get('temperature', {}).get('min')}°C\n"
-        f"- Max Temp: {weather.get('temperature', {}).get('max')}°C\n"
-        f"- Precipitation: {weather.get('precipitation')}\n\n"
-        f"Soil Information:\n"
-        f"- Dominant Soil Types: {soil.get('Dominant_Soil_Types')}\n"
-        f"- District: {soil.get('district')}\n"
-    )
+     return str(context_json)

@@ -21,8 +21,9 @@ const LocationPermissionPage: React.FC = () => {
     
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // In a real app, you would store these coordinates and use them for API calls
         const { latitude, longitude } = position.coords;
+        localStorage.setItem("latitude", latitude.toString());
+        localStorage.setItem("longitude", longitude.toString());
         console.log(`Location: ${latitude}, ${longitude}`);
         
         // Mock API call delay

@@ -15,4 +15,7 @@ class ChatBot(APIView):
             response = get_chat_response(user_query, prompt_type, lon, lat)
         except Exception as e:
             return drfResponse.Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return drfResponse.Response({"response": response}, status=status.HTTP_200_OK)
+        return response
+   
+
+

@@ -1,5 +1,6 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { AuthProvider } from './contexts/auth-context';
+import { RecommendedCropsProvider } from './contexts/recommended_crops';
 import ProtectedRoute from './components/protected-route';
 import LoginPage from './pages/login';
 import SignupPage from './pages/signup';
@@ -14,30 +15,32 @@ import GovernmentSchemesPage from './pages/government-schemes';
 export default function App() {
   return (
     <AuthProvider>
-      <Switch>
-        <Route exact path="/" component={LoginPage} />
-        <Route path="/signup" component={SignupPage} />
-        <ProtectedRoute
-          path="/location-permission"
-          component={LocationPermissionPage}
-        />
-        <ProtectedRoute path="/dashboard" component={DashboardPage} />
-        <ProtectedRoute
-          path="/crop-recommendation"
-          component={CropRecommendationPage}
-        />
-        <ProtectedRoute path="/soil-test" component={SoilTestPage} />
-        <ProtectedRoute path="/diagnosis" component={DiagnosisPage} />
-        <ProtectedRoute
-          path="/voice-assistant"
-          component={VoiceAssistantPage}
-        />
-        <ProtectedRoute
-          path="/government-schemes"
-          component={GovernmentSchemesPage}
-        />
-        <Redirect to="/" />
-      </Switch>
+      <RecommendedCropsProvider>
+        <Switch>
+          <Route exact path="/" component={LoginPage} />
+          <Route path="/signup" component={SignupPage} />
+          <ProtectedRoute
+            path="/location-permission"
+            component={LocationPermissionPage}
+          />
+          <ProtectedRoute path="/dashboard" component={DashboardPage} />
+          <ProtectedRoute
+            path="/crop-recommendation"
+            component={CropRecommendationPage}
+          />
+          <ProtectedRoute path="/soil-test" component={SoilTestPage} />
+          <ProtectedRoute path="/diagnosis" component={DiagnosisPage} />
+          <ProtectedRoute
+            path="/voice-assistant"
+            component={VoiceAssistantPage}
+          />
+          <ProtectedRoute
+            path="/government-schemes"
+            component={GovernmentSchemesPage}
+          />
+          <Redirect to="/" />
+        </Switch>
+      </RecommendedCropsProvider>
     </AuthProvider>
   );
 }
