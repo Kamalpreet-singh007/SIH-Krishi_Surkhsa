@@ -4,6 +4,7 @@ import { User } from './types';
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  loading: boolean;
   accessToken: string;
   refreshToken: string;
   login: (email: string, password: string) => Promise<void>;
@@ -17,6 +18,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = React.useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsAuthenticated(true);
+    }
+    setLoading(false);
+  }, []);
+
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
   const [accessToken, setAccesstoken] = React.useState<string>('');
   const [refreshToken, setRefreshtoken] = React.useState<string>('');
@@ -114,3 +127,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

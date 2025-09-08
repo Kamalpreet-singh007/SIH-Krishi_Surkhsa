@@ -19,9 +19,57 @@ interface Scheme {
 const GovernmentSchemesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
-  
-  // Mock data for government schemes
-  const schemes: Scheme[] = [
+
+  // Jharkhand-specific schemes (added at top)
+  const jharkhandSchemes: Scheme[] = [
+    {
+      id: "jharkhand-agri-sub",
+      title: "Jharkhand Agricultural Subsidy Scheme",
+      description: "Special subsidy scheme for small and marginal farmers in Jharkhand for seeds, fertilizers, and equipment.",
+      eligibility: ["Small and marginal farmers of Jharkhand"],
+      benefits: "Up to 50% subsidy on agricultural inputs and machinery.",
+      deadline: null,
+      applicationLink: "https://jharkhand.gov.in/agri-subsidy",
+      category: "subsidy",
+      isNew: true
+    },
+    {
+      id: "jharkhand-crop-insurance",
+      title: "Jharkhand Crop Insurance Scheme",
+      description: "Crop insurance scheme specially designed for Jharkhand farmers to cover losses due to natural calamities.",
+      eligibility: ["Farmers growing notified crops in Jharkhand"],
+      benefits: "Comprehensive crop insurance coverage with minimum premium.",
+      deadline: null,
+      applicationLink: "https://jharkhand.gov.in/crop-insurance",
+      category: "insurance",
+      isNew: true
+    },
+    {
+      id: "jharkhand-kcc",
+      title: "Jharkhand Kisan Credit Card (KCC)",
+      description: "Special KCC scheme for farmers in Jharkhand to provide easy and timely credit support.",
+      eligibility: ["All registered farmers in Jharkhand"],
+      benefits: "Low-interest credit up to ₹1,00,000 for agricultural needs.",
+      deadline: null,
+      applicationLink: "https://jharkhand.gov.in/kcc",
+      category: "loan",
+      isNew: true
+    },
+    {
+      id: "jharkhand-irrigation",
+      title: "Jharkhand Micro Irrigation Scheme",
+      description: "Subsidy scheme for micro-irrigation systems in Jharkhand for water-efficient farming.",
+      eligibility: ["Small and marginal farmers in Jharkhand"],
+      benefits: "Subsidy up to 60% for drip and sprinkler irrigation systems.",
+      deadline: null,
+      applicationLink: "https://jharkhand.gov.in/micro-irrigation",
+      category: "subsidy",
+      isNew: true
+    }
+  ];
+
+  // Existing schemes
+  const otherSchemes: Scheme[] = [
     {
       id: "pm-kisan",
       title: "PM-KISAN",
@@ -55,9 +103,7 @@ const GovernmentSchemesPage: React.FC = () => {
       id: "soil-health-card",
       title: "Soil Health Card Scheme",
       description: "A scheme to issue soil health cards to farmers. The scheme provides information on soil nutrient status and recommendations on appropriate dosage of nutrients for improving soil health and fertility.",
-      eligibility: [
-        "All farmers across India"
-      ],
+      eligibility: ["All farmers across India"],
       benefits: "Free soil testing and recommendations for farmers to improve productivity through judicious use of inputs.",
       deadline: null,
       applicationLink: "https://soilhealth.dac.gov.in/",
@@ -82,9 +128,7 @@ const GovernmentSchemesPage: React.FC = () => {
       id: "pmksy",
       title: "Pradhan Mantri Krishi Sinchayee Yojana",
       description: "A scheme to ensure access to some means of protective irrigation to all agricultural farms in the country and to produce 'per drop more crop'.",
-      eligibility: [
-        "All farmers with focus on small and marginal farmers"
-      ],
+      eligibility: ["All farmers with focus on small and marginal farmers"],
       benefits: "Financial assistance for micro-irrigation systems like drip and sprinkler irrigation. Subsidy up to 55% for small and marginal farmers.",
       deadline: null,
       applicationLink: "https://pmksy.gov.in/",
@@ -92,39 +136,32 @@ const GovernmentSchemesPage: React.FC = () => {
       isNew: true
     }
   ];
-  
+
+  // Combine Jharkhand schemes first
+  const schemes: Scheme[] = [...jharkhandSchemes, ...otherSchemes];
+
   // Filter schemes based on search query and category
   const filteredSchemes = schemes.filter((scheme) => {
-    const matchesSearch = scheme.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          scheme.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
+    const matchesSearch =
+      scheme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      scheme.description.toLowerCase().includes(searchQuery.toLowerCase());
+
     const matchesCategory = selectedCategory ? scheme.category === selectedCategory : true;
-    
+
     return matchesSearch && matchesCategory;
   });
-  
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
-  
+
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5
-      }
-    }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
-  
+
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "subsidy":
@@ -137,7 +174,7 @@ const GovernmentSchemesPage: React.FC = () => {
         return "default";
     }
   };
-  
+
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case "subsidy":
@@ -160,7 +197,7 @@ const GovernmentSchemesPage: React.FC = () => {
             Explore active government schemes and subsidies for farmers
           </p>
         </div>
-        
+
         <div className="mb-8">
           <div className="flex flex-col md:flex-row gap-4">
             <Input
@@ -170,7 +207,7 @@ const GovernmentSchemesPage: React.FC = () => {
               startContent={<Icon icon="lucide:search" className="text-default-400" />}
               className="flex-grow"
             />
-            
+
             <div className="flex gap-2 flex-wrap">
               <Button
                 variant={selectedCategory === null ? "solid" : "flat"}
@@ -219,7 +256,7 @@ const GovernmentSchemesPage: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         {filteredSchemes.length === 0 ? (
           <div className="text-center py-12">
             <Icon icon="lucide:search-x" className="text-default-400 h-12 w-12 mx-auto mb-4" />
@@ -229,12 +266,7 @@ const GovernmentSchemesPage: React.FC = () => {
             </p>
           </div>
         ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="space-y-6"
-          >
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
             {filteredSchemes.map((scheme) => (
               <motion.div key={scheme.id} variants={itemVariants}>
                 <Card>
@@ -243,24 +275,24 @@ const GovernmentSchemesPage: React.FC = () => {
                       <div className="flex-grow">
                         <div className="flex items-center gap-2 mb-2">
                           <h2 className="text-xl font-semibold">{scheme.title}</h2>
-                          {scheme.isNew && (
-                            <Chip color="primary" size="sm" variant="flat">New</Chip>
-                          )}
+                          {scheme.isNew && <Chip color="primary" size="sm" variant="flat">New</Chip>}
                         </div>
-                        
+
                         <div className="mb-4 flex items-center gap-2">
                           <Chip
-                            startContent={<Icon icon={getCategoryIcon(scheme.category)} size={16} />}
+                            startContent={<Icon icon={getCategoryIcon(scheme.category)} width={16} height={16} />}
+
                             color={getCategoryColor(scheme.category) as any}
                             variant="flat"
                             size="sm"
                           >
                             {scheme.category.charAt(0).toUpperCase() + scheme.category.slice(1)}
                           </Chip>
-                          
+
                           {scheme.deadline && (
                             <Chip
-                              startContent={<Icon icon="lucide:calendar" size={16} />}
+                              startContent={<Icon icon="lucide:calendar" width={16} height={16} />}
+
                               color="warning"
                               variant="flat"
                               size="sm"
@@ -269,11 +301,9 @@ const GovernmentSchemesPage: React.FC = () => {
                             </Chip>
                           )}
                         </div>
-                        
-                        <p className="text-default-600 mb-4">
-                          {scheme.description}
-                        </p>
-                        
+
+                        <p className="text-default-600 mb-4">{scheme.description}</p>
+
                         <div className="mb-4">
                           <h3 className="font-medium mb-2">Eligibility:</h3>
                           <ul className="list-disc list-inside text-default-600 space-y-1">
@@ -282,13 +312,13 @@ const GovernmentSchemesPage: React.FC = () => {
                             ))}
                           </ul>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-medium mb-2">Benefits:</h3>
                           <p className="text-default-600">{scheme.benefits}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex flex-col justify-center gap-3 md:min-w-[200px]">
                         <Button
                           as={Link}
@@ -299,20 +329,8 @@ const GovernmentSchemesPage: React.FC = () => {
                         >
                           Apply Now
                         </Button>
+
                         
-                        <Button
-                          variant="flat"
-                          endContent={<Icon icon="lucide:info" />}
-                        >
-                          More Details
-                        </Button>
-                        
-                        <Button
-                          variant="flat"
-                          endContent={<Icon icon="lucide:download" />}
-                        >
-                          Download Guidelines
-                        </Button>
                       </div>
                     </div>
                   </CardBody>

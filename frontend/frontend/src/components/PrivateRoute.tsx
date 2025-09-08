@@ -2,15 +2,12 @@ import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 import { useAuth } from "../contexts/auth-context";
 
-interface ProtectedRouteProps extends RouteProps {
+interface PrivateRouteProps extends RouteProps {
   component: React.ComponentType<any>;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  component: Component,
-  ...rest
-}) => {
-  const { user } = useAuth(); // use `user` for authentication check
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ component: Component, ...rest }) => {
+  const { user } = useAuth();
 
   return (
     <Route
@@ -22,7 +19,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
           <Redirect
             to={{
               pathname: "/login",
-              state: { from: props.location }, // preserve intended page
+              state: { from: props.location }, // remember the page user wanted
             }}
           />
         )
@@ -31,4 +28,4 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   );
 };
 
-export default ProtectedRoute;
+export default PrivateRoute;

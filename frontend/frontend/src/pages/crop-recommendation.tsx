@@ -15,6 +15,78 @@ import { CropRecommendation } from '../contexts/types';
 import { useRecommended } from '../contexts/recommended_crops';
 
 const CropRecommendationPage: React.FC = () => {
+  const [selected, setSelected] = React.useState("recommended");
+  const history = useHistory(); // ✅ useHistory for navigation
+
+  // Recommended crops (all in Pandara Mandi, Ranchi)
+  const recommendedCrops: CropRecommendation[] = [
+    {
+      id: 1,
+      name: "Rice",
+      confidence: 95,
+      description: "Rice is a staple food crop well-suited for high rainfall and humid conditions.",
+      waterRequirement: "High",
+      soilType: "Clay or clay loam",
+      growthPeriod: "3-6 months",
+      icon: "lucide:wheat",
+      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
+      priceTimeline: getLast7Days(),
+    },
+    {
+      id: 2,
+      name: "Maize",
+      confidence: 87,
+      description: "Maize (corn) is a versatile crop that adapts to different climates.",
+      waterRequirement: "Medium",
+      soilType: "Well-drained loamy soil",
+      growthPeriod: "3-4 months",
+      icon: "lucide:wheat",
+      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
+      priceTimeline: getLast7Days(),
+    },
+    {
+      id: 3,
+      name: "Soybean",
+      confidence: 82,
+      description: "Soybean improves soil fertility by fixing nitrogen and has strong demand.",
+      waterRequirement: "Medium-Low",
+      soilType: "Well-drained loamy soil",
+      growthPeriod: "3-5 months",
+      icon: "lucide:sprout",
+      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
+      priceTimeline: getLast7Days(),
+    },
+  ];
+
+  // Alternative crops
+  const alternativeCrops: CropRecommendation[] = [
+    {
+      id: 4,
+      name: "Groundnut",
+      confidence: 78,
+      description: "Groundnut grows well in sandy soils and is drought-tolerant.",
+      waterRequirement: "Medium-Low",
+      soilType: "Sandy loam",
+      growthPeriod: "3-5 months",
+      icon: "lucide:sprout",
+      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
+      priceTimeline: getLast7Days(),
+    },
+    {
+      id: 5,
+      name: "Black Gram",
+      confidence: 75,
+      description: "Black gram is a short-duration pulse crop with low water needs.",
+      waterRequirement: "Low",
+      soilType: "Well-drained loamy soil",
+      growthPeriod: "2-3 months",
+      icon: "lucide:sprout",
+      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
+      priceTimeline: getLast7Days(),
+    },
+  ];
+
+  // Animations
   const [selected, setSelected] = React.useState('recommended');
   const cropcontext = useRecommended();
   const { recommendedCrops } = cropcontext;
@@ -162,6 +234,7 @@ const CropRecommendationPage: React.FC = () => {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto p-4 sm:p-6">
+        {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold mb-2">Crop Recommendations</h1>
           <p className="text-default-500">
@@ -236,8 +309,9 @@ const CropRecommendationPage: React.FC = () => {
           ).map((crop) => (
             <motion.div key={crop.Id} variants={itemVariants}>
               <Card className="h-full">
-                <CardBody className="p-6">
-                  <div className="flex items-start gap-4 mb-4">
+                <CardBody className="p-6 space-y-4">
+                  {/* Header */}
+                  <div className="flex items-start gap-4">
                     <div className="bg-primary-100 p-3 rounded-full">
                       <Icon icon={crop.Icon} className="text-primary h-6 w-6" />
                     </div>
@@ -301,22 +375,71 @@ const CropRecommendationPage: React.FC = () => {
                         <p className="font-medium">{crop.GrowthPeriod}</p>
                       </div>
                     </div>
+
+                  {/* Description */}
+                  <p className="text-default-600 text-sm">{crop.description}</p>
+
+                  {/* Price Timeline */}
+                  <div className="h-44">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={crop.priceTimeline}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <Tooltip
+                          formatter={(value: number) => [`₹${value}/kg`, "Price"]}
+                          labelFormatter={(label) => `Updated every 7 days: ${label}`}
+                        />
+                        <Line type="monotone" dataKey="price" stroke="#4f46e5" strokeWidth={2} dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  {/* Quick Info */}
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div className="p-2 bg-default-50 rounded-medium">
+                      <p className="text-default-500">Water Need</p>
+                      <p className="font-medium">{crop.waterRequirement}</p>
+                    </div>
+                    <div className="p-2 bg-default-50 rounded-medium">
+                      <p className="text-default-500">Soil Type</p>
+                      <p className="font-medium">{crop.soilType}</p>
+                    </div>
+                    <div className="p-2 bg-default-50 rounded-medium">
+                      <p className="text-default-500">Growth</p>
+                      <p className="font-medium">{crop.growthPeriod}</p>
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-sm text-default-600 flex items-center gap-1">
+                      <Icon icon="lucide:map-pin" className="h-4 w-4 text-primary" />
+                      {crop.location}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      endContent={<Icon icon="lucide:arrow-right" />}
+                      onClick={() =>
+                        window.open(
+                          `https://www.google.com/maps/search/${encodeURIComponent(crop.location)}`,
+                          "_blank"
+                        )
+                      }
+                    >
+                      View Location
+                    </Button>
                   </div>
                 </CardBody>
+
+                {/* Footer */}
                 <CardFooter className="gap-2">
                   <Button
                     color="primary"
                     className="flex-grow"
                     endContent={<Icon icon="lucide:info" />}
+                    onClick={() => history.push("/detailed-guide")} // ✅ navigate to Detailed Guide
                   >
                     Detailed Guide
-                  </Button>
-                  <Button
-                    variant="flat"
-                    className="flex-grow"
-                    endContent={<Icon icon="lucide:share" />}
-                  >
-                    Share
                   </Button>
                 </CardFooter>
               </Card>
@@ -345,3 +468,4 @@ const CropRecommendationPage: React.FC = () => {
 };
 
 export default CropRecommendationPage;
+
