@@ -30,7 +30,7 @@ def get_crop_recomendation(user_query ,prompt_type,lon, lat):
       context_json = get_context_json(lon, lat)
       context = context_builder(context_json)
       memory = ""  # Placeholder for memory, can be expanded later
-      prompt = prompt_builder(context, memory, user_query, prompt_type, lon, lat)
+      prompt = prompt_builder(context, memory, user_query, prompt_type)
       # print(prompt)
 
       # stearm implement
@@ -42,7 +42,7 @@ def get_chat_response(user_query, prompt_type, lon, lat):
      context_json = get_context_json(lon, lat)
      context = context_builder(context_json)
      memory = ""  # Placeholder for memory, can be expanded later
-     prompt = prompt_builder(context, memory, user_query, prompt_type, lon, lat)
+     prompt = prompt_builder(context, memory, user_query, prompt_type)
      response = askAi(prompt)
      return response
 

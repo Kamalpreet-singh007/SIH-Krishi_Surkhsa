@@ -1,7 +1,6 @@
 // import { Switch, Route, Redirect } from "react-router-dom";
 // import { AuthProvider } from "./contexts/auth-context";
 // import { RecommendedCropsProvider } from './contexts/recommended_crops';
-import ProtectedRoute from "./components/protected-route";
 
 // // Pages
 // import LandingPage from "./pages/landing"; // ✅ new landing page
@@ -58,29 +57,29 @@ import ProtectedRoute from "./components/protected-route";
 //     </AuthProvider>
 //   );
 // }
-import React from "react";
-import { Switch, Route, Redirect, RouteProps } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/auth-context";
+import React from 'react';
+import { Switch, Route, Redirect, RouteProps } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/auth-context';
 
 // Pages
-import LandingPage from "./pages/landing";
-import LoginPage from "./pages/login";
-import SignupPage from "./pages/signup";
-import LocationPermissionPage from "./pages/location-permission";
-import DashboardPage from "./pages/dashboard";
-import CropRecommendationPage from "./pages/crop-recommendation";
-import DetailedGuidePage from "./pages/DetailedGuidePage";
-import SoilTestPage from "./pages/soil-test";
-import DiagnosisPage from "./pages/diagnosis";
-import VoiceAssistantPage from "./pages/voice-assistant";
-import GovernmentSchemesPage from "./pages/government-schemes";
-import CommunityPage from "./pages/community";
+import LandingPage from './pages/landing';
+import LoginPage from './pages/login';
+import SignupPage from './pages/signup';
+import LocationPermissionPage from './pages/location-permission';
+import DashboardPage from './pages/dashboard';
+import CropRecommendationPage from './pages/crop-recommendation';
+import DetailedGuidePage from './pages/DetailedGuidePage';
+import SoilTestPage from './pages/soil-test';
+import DiagnosisPage from './pages/diagnosis';
+import VoiceAssistantPage from './pages/voice-assistant';
+import GovernmentSchemesPage from './pages/government-schemes';
+import CommunityPage from './pages/community';
+import { RecommendedCropsProvider } from './contexts/recommended_crops';
 
 // Protected Route
-const ProtectedRoute: React.FC<RouteProps & { component: React.ComponentType<any> }> = ({
-  component: Component,
-  ...rest
-}) => {
+const ProtectedRoute: React.FC<
+  RouteProps & { component: React.ComponentType<any> }
+> = ({ component: Component, ...rest }) => {
   const { user } = useAuth();
   return (
     <Route
@@ -91,7 +90,7 @@ const ProtectedRoute: React.FC<RouteProps & { component: React.ComponentType<any
         ) : (
           <Redirect
             to={{
-              pathname: "/login",
+              pathname: '/login',
               state: { from: props.location },
             }}
           />
@@ -107,12 +106,12 @@ export default function App() {
       <RecommendedCropsProvider>
         <Switch>
           {/* Public Routes */}
-        <Route exact path="/" component={LandingPage} />
-        <Route path="/login" component={LoginPage} />
+          <Route exact path="/" component={LandingPage} />
+          <Route path="/login" component={LoginPage} />
           <Route path="/signup" component={SignupPage} />
-  
-        {/* Protected Routes */}
-        <ProtectedRoute
+
+          {/* Protected Routes */}
+          <ProtectedRoute
             path="/location-permission"
             component={LocationPermissionPage}
           />
@@ -122,10 +121,10 @@ export default function App() {
             component={CropRecommendationPage}
           />
           <ProtectedRoute
-          path="/detailed-guide"
-          component={DetailedGuidePage}
-        />
-        <ProtectedRoute path="/soil-test" component={SoilTestPage} />
+            path="/detailed-guide"
+            component={DetailedGuidePage}
+          />
+          <ProtectedRoute path="/soil-test" component={SoilTestPage} />
           <ProtectedRoute path="/diagnosis" component={DiagnosisPage} />
           <ProtectedRoute
             path="/voice-assistant"
@@ -137,8 +136,8 @@ export default function App() {
           />
           <ProtectedRoute path="/community" component={CommunityPage} />
 
-        {/* Fallback */}
-        <Redirect to="/" />
+          {/* Fallback */}
+          <Redirect to="/" />
         </Switch>
       </RecommendedCropsProvider>
     </AuthProvider>

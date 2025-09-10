@@ -10,225 +10,36 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
+import {
+  ResponsiveContainer,
+  LineChart,
+  CartesianGrid,
+  Tooltip,
+  Line,
+} from 'recharts';
 import AppLayout from '../components/app-layout';
 import { CropRecommendation } from '../contexts/types';
 import { useRecommended } from '../contexts/recommended_crops';
+import { useHistory } from 'react-router-dom';
 
 const CropRecommendationPage: React.FC = () => {
-  const [selected, setSelected] = React.useState("recommended");
-  const history = useHistory(); // ✅ useHistory for navigation
-
-  // Recommended crops (all in Pandara Mandi, Ranchi)
-  const recommendedCrops: CropRecommendation[] = [
-    {
-      id: 1,
-      name: "Rice",
-      confidence: 95,
-      description: "Rice is a staple food crop well-suited for high rainfall and humid conditions.",
-      waterRequirement: "High",
-      soilType: "Clay or clay loam",
-      growthPeriod: "3-6 months",
-      icon: "lucide:wheat",
-      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
-      priceTimeline: getLast7Days(),
-    },
-    {
-      id: 2,
-      name: "Maize",
-      confidence: 87,
-      description: "Maize (corn) is a versatile crop that adapts to different climates.",
-      waterRequirement: "Medium",
-      soilType: "Well-drained loamy soil",
-      growthPeriod: "3-4 months",
-      icon: "lucide:wheat",
-      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
-      priceTimeline: getLast7Days(),
-    },
-    {
-      id: 3,
-      name: "Soybean",
-      confidence: 82,
-      description: "Soybean improves soil fertility by fixing nitrogen and has strong demand.",
-      waterRequirement: "Medium-Low",
-      soilType: "Well-drained loamy soil",
-      growthPeriod: "3-5 months",
-      icon: "lucide:sprout",
-      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
-      priceTimeline: getLast7Days(),
-    },
-  ];
-
-  // Alternative crops
-  const alternativeCrops: CropRecommendation[] = [
-    {
-      id: 4,
-      name: "Groundnut",
-      confidence: 78,
-      description: "Groundnut grows well in sandy soils and is drought-tolerant.",
-      waterRequirement: "Medium-Low",
-      soilType: "Sandy loam",
-      growthPeriod: "3-5 months",
-      icon: "lucide:sprout",
-      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
-      priceTimeline: getLast7Days(),
-    },
-    {
-      id: 5,
-      name: "Black Gram",
-      confidence: 75,
-      description: "Black gram is a short-duration pulse crop with low water needs.",
-      waterRequirement: "Low",
-      soilType: "Well-drained loamy soil",
-      growthPeriod: "2-3 months",
-      icon: "lucide:sprout",
-      location: "Pandara Wholesale Mandi, Ranchi, Jharkhand",
-      priceTimeline: getLast7Days(),
-    },
-  ];
-
-  // Animations
+  const history = useHistory();
   const [selected, setSelected] = React.useState('recommended');
-  const cropcontext = useRecommended();
-  const { recommendedCrops } = cropcontext;
+  const { recommendedCrops } = useRecommended();
 
   const alternativeCrops = recommendedCrops;
-  // Mock data for recommended crops
-  // const recommendedCrops: CropRecommendation[] = [
-  //   {
-  //     id: 1,
-  //     name: 'Rice',
-  //     confidence: 95,
-  //     description:
-  //       'Rice is a staple food crop well-suited for the climate and soil conditions in your region. It thrives in areas with high rainfall and humidity.',
-  //     pros: [
-  //       'High market demand',
-  //       'Suitable for local climate',
-  //       'Government subsidies available',
-  //       'Well-established supply chain',
-  //     ],
-  //     cons: [
-  //       'Water-intensive cultivation',
-  //       'Susceptible to certain pests',
-  //       'Requires specialized equipment',
-  //     ],
-  //     waterRequirement: 'High',
-  //     soilType: 'Clay or clay loam',
-  //     growthPeriod: '3-6 months',
-  //     icon: 'lucide:wheat',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Maize',
-  //     confidence: 87,
-  //     description:
-  //       "Maize (corn) is a versatile crop that can be grown in various conditions. It's relatively drought-tolerant compared to rice.",
-  //     pros: [
-  //       'Multiple uses (food, feed, industrial)',
-  //       'Relatively shorter growing season',
-  //       'Lower water requirement than rice',
-  //       'Good market value',
-  //     ],
-  //     cons: [
-  //       'Susceptible to fall armyworm',
-  //       'Requires adequate nitrogen',
-  //       'Price fluctuations',
-  //     ],
-  //     waterRequirement: 'Medium',
-  //     soilType: 'Well-drained loamy soil',
-  //     growthPeriod: '3-4 months',
-  //     icon: 'lucide:wheat',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Soybean',
-  //     confidence: 82,
-  //     description:
-  //       "Soybean is a legume crop that improves soil fertility by fixing nitrogen. It's a good rotation crop with cereals.",
-  //     pros: [
-  //       'Improves soil fertility',
-  //       'Good market demand',
-  //       'Drought-tolerant',
-  //       'Low input requirement',
-  //     ],
-  //     cons: [
-  //       'Susceptible to pod shattering',
-  //       'Requires proper inoculation',
-  //       'Sensitive to photoperiod',
-  //     ],
-  //     waterRequirement: 'Medium-Low',
-  //     soilType: 'Well-drained loamy soil',
-  //     growthPeriod: '3-5 months',
-  //     icon: 'lucide:sprout',
-  //   },
-  // ];
 
-  // const alternativeCrops: CropRecommendation[] = [
-  //   {
-  //     id: 4,
-  //     name: 'Groundnut',
-  //     confidence: 78,
-  //     description:
-  //       "Groundnut (peanut) is a legume crop that grows well in light sandy soils. It's drought-tolerant and improves soil fertility.",
-  //     pros: [
-  //       'Drought-tolerant',
-  //       'Improves soil fertility',
-  //       'Multiple uses (oil, food)',
-  //       'Good market value',
-  //     ],
-  //     cons: [
-  //       'Labor-intensive harvesting',
-  //       'Susceptible to aflatoxin contamination',
-  //       'Requires well-drained soil',
-  //     ],
-  //     waterRequirement: 'Medium-Low',
-  //     soilType: 'Sandy loam',
-  //     growthPeriod: '3-5 months',
-  //     icon: 'lucide:sprout',
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Black Gram',
-  //     confidence: 75,
-  //     description:
-  //       'Black gram is a pulse crop that requires less water and can be grown as an intercrop or rotation crop.',
-  //     pros: [
-  //       'Short duration crop',
-  //       'Low water requirement',
-  //       'Improves soil fertility',
-  //       'Can be grown as intercrop',
-  //     ],
-  //     cons: [
-  //       'Susceptible to pests and diseases',
-  //       'Lower yield potential',
-  //       'Requires proper seed treatment',
-  //     ],
-  //     waterRequirement: 'Low',
-  //     soilType: 'Well-drained loamy soil',
-  //     growthPeriod: '2-3 months',
-  //     icon: 'lucide:sprout',
-  //   },
-  // ];
-
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
+      transition: { staggerChildren: 0.1 },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
   return (
@@ -243,6 +54,7 @@ const CropRecommendationPage: React.FC = () => {
           </p>
         </div>
 
+        {/* Location Data Card */}
         <Card className="mb-8">
           <CardBody className="p-6">
             <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
@@ -254,7 +66,6 @@ const CropRecommendationPage: React.FC = () => {
                   />
                 </div>
               </div>
-
               <div className="flex-grow space-y-1">
                 <h2 className="text-lg font-semibold">Your Location Data</h2>
                 <p className="text-default-500">Ranchi, Jharkhand, India</p>
@@ -273,7 +84,6 @@ const CropRecommendationPage: React.FC = () => {
                   </Chip>
                 </div>
               </div>
-
               <div className="flex-shrink-0">
                 <Button
                   color="primary"
@@ -287,16 +97,18 @@ const CropRecommendationPage: React.FC = () => {
           </CardBody>
         </Card>
 
+        {/* Tabs */}
         <Tabs
           aria-label="Crop recommendations"
           selectedKey={selected}
-          onSelectionChange={setSelected as any}
+          onSelectionChange={(key) => setSelected(key as string)}
           className="mb-6"
         >
           <Tab key="recommended" title="Recommended Crops" />
           <Tab key="alternative" title="Alternative Options" />
         </Tabs>
 
+        {/* Crop Cards */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -306,7 +118,7 @@ const CropRecommendationPage: React.FC = () => {
           {(selected === 'recommended'
             ? recommendedCrops
             : alternativeCrops
-          ).map((crop) => (
+          ).map((crop: CropRecommendation) => (
             <motion.div key={crop.Id} variants={itemVariants}>
               <Card className="h-full">
                 <CardBody className="p-6 space-y-4">
@@ -329,11 +141,13 @@ const CropRecommendationPage: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Description */}
                   <p className="text-default-600 text-sm mb-4">
                     {crop.Description}
                   </p>
 
                   <div className="space-y-4">
+                    {/* Advantages */}
                     <div>
                       <h4 className="text-sm font-medium mb-2 flex items-center gap-1">
                         <Icon
@@ -343,12 +157,13 @@ const CropRecommendationPage: React.FC = () => {
                         Advantages
                       </h4>
                       <ul className="list-disc list-inside text-sm text-default-600 space-y-1 pl-1">
-                        {crop.Pros.map((pro, index: number) => (
+                        {crop.Pros.map((pro, index) => (
                           <li key={index}>{pro}</li>
                         ))}
                       </ul>
                     </div>
 
+                    {/* Challenges */}
                     <div>
                       <h4 className="text-sm font-medium mb-2 flex items-center gap-1">
                         <Icon icon="lucide:x" className="text-danger h-4 w-4" />
@@ -361,6 +176,7 @@ const CropRecommendationPage: React.FC = () => {
                       </ul>
                     </div>
 
+                    {/* Quick Info */}
                     <div className="grid grid-cols-3 gap-2 text-xs">
                       <div className="p-2 bg-default-50 rounded-medium">
                         <p className="text-default-500">Water Need</p>
@@ -376,68 +192,67 @@ const CropRecommendationPage: React.FC = () => {
                       </div>
                     </div>
 
-                  {/* Description */}
-                  <p className="text-default-600 text-sm">{crop.description}</p>
+                    {/* Price Timeline */}
+                    <div className="h-44">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={crop.PriceTimeline}>
+                          <CartesianGrid
+                            strokeDasharray="3 3"
+                            vertical={false}
+                          />
+                          <Tooltip
+                            formatter={(value: number) => [
+                              `₹${value}/kg`,
+                              'Price',
+                            ]}
+                            labelFormatter={(label) =>
+                              `Updated every 7 days: ${label}`
+                            }
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="Price"
+                            stroke="#4f46e5"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
 
-                  {/* Price Timeline */}
-                  <div className="h-44">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={crop.priceTimeline}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <Tooltip
-                          formatter={(value: number) => [`₹${value}/kg`, "Price"]}
-                          labelFormatter={(label) => `Updated every 7 days: ${label}`}
+                    {/* Location */}
+                    <div className="flex items-center justify-between mt-3">
+                      <span className="text-sm text-default-600 flex items-center gap-1">
+                        <Icon
+                          icon="lucide:map-pin"
+                          className="h-4 w-4 text-primary"
                         />
-                        <Line type="monotone" dataKey="price" stroke="#4f46e5" strokeWidth={2} dot={false} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  {/* Quick Info */}
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div className="p-2 bg-default-50 rounded-medium">
-                      <p className="text-default-500">Water Need</p>
-                      <p className="font-medium">{crop.waterRequirement}</p>
+                        {crop.Location}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="flat"
+                        endContent={<Icon icon="lucide:arrow-right" />}
+                        onClick={() =>
+                          window.open(
+                            `https://www.google.com/maps/search/${encodeURIComponent(
+                              crop.Location
+                            )}`,
+                            '_blank'
+                          )
+                        }
+                      >
+                        View Location
+                      </Button>
                     </div>
-                    <div className="p-2 bg-default-50 rounded-medium">
-                      <p className="text-default-500">Soil Type</p>
-                      <p className="font-medium">{crop.soilType}</p>
-                    </div>
-                    <div className="p-2 bg-default-50 rounded-medium">
-                      <p className="text-default-500">Growth</p>
-                      <p className="font-medium">{crop.growthPeriod}</p>
-                    </div>
-                  </div>
-
-                  {/* Location */}
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-sm text-default-600 flex items-center gap-1">
-                      <Icon icon="lucide:map-pin" className="h-4 w-4 text-primary" />
-                      {crop.location}
-                    </span>
-                    <Button
-                      size="sm"
-                      variant="flat"
-                      endContent={<Icon icon="lucide:arrow-right" />}
-                      onClick={() =>
-                        window.open(
-                          `https://www.google.com/maps/search/${encodeURIComponent(crop.location)}`,
-                          "_blank"
-                        )
-                      }
-                    >
-                      View Location
-                    </Button>
                   </div>
                 </CardBody>
-
-                {/* Footer */}
                 <CardFooter className="gap-2">
                   <Button
                     color="primary"
                     className="flex-grow"
                     endContent={<Icon icon="lucide:info" />}
-                    onClick={() => history.push("/detailed-guide")} // ✅ navigate to Detailed Guide
+                    onClick={() => history.push('/detailed-guide')}
                   >
                     Detailed Guide
                   </Button>
@@ -447,6 +262,7 @@ const CropRecommendationPage: React.FC = () => {
           ))}
         </motion.div>
 
+        {/* Footer CTA */}
         <div className="mt-8 text-center">
           <p className="text-default-500 mb-4">
             Need more personalized recommendations based on your soil
@@ -468,4 +284,3 @@ const CropRecommendationPage: React.FC = () => {
 };
 
 export default CropRecommendationPage;
-

@@ -16,8 +16,8 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     if (!user) {
       history.replace({
-        pathname: "/login",
-        state: { from: "/dashboard" },
+        pathname: '/login',
+        state: { from: '/dashboard' },
       });
     }
   }, [user, history]);
@@ -28,31 +28,19 @@ const DashboardPage: React.FC = () => {
   }
 
   const weatherData = {
-    temperature: "28°C",
-    humidity: "65%",
-    rainfall: "Low",
-    sunlight: "High",
-  };
-
-  const recommendedCrops = [
-    { id: 1, name: "Rice", confidence: 95, icon: "lucide:wheat" },
-    { id: 2, name: "Maize", confidence: 87, icon: "lucide:wheat" },
-    { id: 3, name: "Soybean", confidence: 82, icon: "lucide:sprout" },
-  ];
-
-  const cropContext = useRecommended();
-  const { recommendedCrops, fetchRecommendedCrops } = cropContext;
-  const [weatherData, setWeatherData] = React.useState({
     temperature: '28°C',
     humidity: '65%',
     rainfall: 'Low',
     sunlight: 'High',
-  });
+  };
+
+  const cropContext = useRecommended();
+  const { fetchRecommendedCrops, recommendedCrops } = cropContext;
 
   React.useEffect(() => {
     const lat = localStorage.getItem('latitude');
     const lon = localStorage.getItem('longitude');
-    console.log('here');
+    console.log('fetching crops');
     if (lat && lon) fetchRecommendedCrops(parseFloat(lat), parseFloat(lon));
   }, [fetchRecommendedCrops]);
   // Mock data for recommended crops
@@ -67,7 +55,6 @@ const DashboardPage: React.FC = () => {
       },
     },
   };
-
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -85,16 +72,13 @@ const DashboardPage: React.FC = () => {
       <div className="max-w-7xl mx-auto p-4 sm:p-6">
         <div className="mb-8">
           <h1 className="text-2xl font-bold mb-2">
-            Welcome, {user.name}!
-          </h1>
-          <h1 className="text-2xl font-bold mb-2">
             Welcome, {user?.name || 'Farmer'}!
           </h1>
           <p className="text-default-500">
-            Get personalized crop recommendations and agricultural advice
-            based on your location and conditions.
             Get personalized crop recommendations and agricultural advice based
-            on your location and conditions.
+            on your location and conditions. Get personalized crop
+            recommendations and agricultural advice based on your location and
+            conditions.
           </p>
         </div>
 
@@ -118,7 +102,10 @@ const DashboardPage: React.FC = () => {
 
                 <div className="space-y-4">
                   {Object.entries(weatherData).map(([key, value]) => (
-                    <div key={key} className="flex items-center justify-between">
+                    <div
+                      key={key}
+                      className="flex items-center justify-between"
+                    >
                       <span className="text-default-500">
                         {key.charAt(0).toUpperCase() + key.slice(1)}
                       </span>
@@ -159,7 +146,6 @@ const DashboardPage: React.FC = () => {
               </CardFooter>
             </Card>
           </motion.div>
-
 
           {/* Recommended Crops Card */}
           <motion.div variants={itemVariants} className="md:col-span-2">
@@ -214,7 +200,6 @@ const DashboardPage: React.FC = () => {
             </Card>
           </motion.div>
 
-
           {/* Quick Actions */}
           <motion.div variants={itemVariants} className="md:col-span-1">
             <Card className="h-full">
@@ -252,7 +237,6 @@ const DashboardPage: React.FC = () => {
               </CardBody>
             </Card>
           </motion.div>
-
 
           {/* Government Schemes */}
           <motion.div variants={itemVariants} className="md:col-span-2">
@@ -305,4 +289,3 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
-

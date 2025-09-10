@@ -7,7 +7,7 @@ interface AuthContextType {
   loading: boolean;
   accessToken: string;
   refreshToken: string;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
@@ -30,7 +30,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setLoading(false);
   }, []);
 
-  const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
   const [accessToken, setAccesstoken] = React.useState<string>('');
   const [refreshToken, setRefreshtoken] = React.useState<string>('');
   // Mock authentication functions
@@ -60,9 +59,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       };
       setUser(User);
       setIsAuthenticated(true);
+      return true;
       localStorage.setItem('user', JSON.stringify(User));
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
+      return false;
     }
   };
 
@@ -113,6 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         login,
         signup,
         logout,
+        loading,
       }}
     >
       {children}
@@ -127,4 +129,3 @@ export const useAuth = () => {
   }
   return context;
 };
-

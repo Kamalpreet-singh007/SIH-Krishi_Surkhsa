@@ -4,15 +4,21 @@ export interface User {
   email: string;
 }
 
-export interface CropRecommendation {
-  Id: number;
-  Name: string;
-  Confidence: number;
-  Description: string;
-  Pros: string[];
-  Cons: string[];
-  WaterRequirement: string;
-  SoilType: string;
-  GrowthPeriod: string;
-  Icon: string;
-}
+export type CropRecommendation = {
+  Id: string | number; // Unique ID
+  Name: string; // Crop name
+  Icon: string; // Iconify icon name
+  Confidence: number; // % match confidence
+  Description: string; // Crop description
+  Pros: string[]; // Advantages
+  Cons: string[]; // Challenges
+  WaterRequirement: string; // Water needs (e.g., "High")
+  SoilType: string; // Suitable soil type
+  GrowthPeriod: string; // Growth duration
+  Location: string; // Crop location
+  PriceTimeline: {
+    // Data for LineChart
+    Date: string; // e.g., "2025-09-01"
+    Price: number; // Price in ₹/kg
+  }[];
+};
