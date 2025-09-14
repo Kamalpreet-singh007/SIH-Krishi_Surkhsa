@@ -11,10 +11,7 @@ class ChatBot(APIView):
         lat = request.data.get("latitude")
         prompt_type = "AGRI_CHATBOT"
 
-        try:
-            response = get_chat_response(user_query, prompt_type, lon, lat)
-        except Exception as e:
-            return drfResponse.Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        response = get_chat_response(user_query, prompt_type, lon, lat)
         return response
    
 

@@ -11,9 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@heroui/react": "2.8.2",
+    "@heroui/react": "^2.8.2",
     "@heroui/use-theme": "2.1.10",
-    "@iconify/react": "latest",
+    "@iconify/react": "^6.0.1",
     "@tailwindcss/postcss": "4.1.11",
     "@tailwindcss/vite": "4.1.11",
     "framer-motion": "^11.18.2",
@@ -33,14 +33,15 @@
     "@babel/types": "^7.27.0",
     "@tailwindcss/postcss": "4.1.11",
     "@tailwindcss/vite": "4.1.11",
+    "@types/node": "^24.3.3",
     "@types/papaparse": "^5.3.16",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/react": "^18.3.24",
+    "@types/react-dom": "^18.3.7",
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.3.4",
     "postcss": "8.5.6",
     "tailwindcss": "4.1.11",
-    "typescript": "5.7.3",
+    "typescript": "^5.7.3",
     "vite": "^6.0.11"
   }
 }
